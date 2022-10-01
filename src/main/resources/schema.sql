@@ -4,7 +4,7 @@ USE `lab404` ;
 
 DROP TABLE IF EXISTS `lab404`.`doctor` ;
 CREATE TABLE IF NOT EXISTS `lab404`.`doctor` (
-    `employee_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `employee_id` BIGINT NOT NULL,
     `department` VARCHAR(255) NULL DEFAULT NULL,
     `name` VARCHAR(255) NULL DEFAULT NULL,
     `status` ENUM('ON_CALL', 'ON', 'OFF') NULL DEFAULT NULL,

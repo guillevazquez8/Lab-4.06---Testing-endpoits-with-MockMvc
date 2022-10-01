@@ -10,7 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
-    Optional<Doctor> findById(Long id);
-    List<Doctor> findByStatus(Status status);
-    List<Doctor> findByDepartment(String department);
+
 }

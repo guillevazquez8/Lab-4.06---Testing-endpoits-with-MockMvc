@@ -1,14 +1,13 @@
 package com.example.lab404.rest;
 
+import com.example.lab404.model.Doctor;
 import com.example.lab404.model.Patient;
 import com.example.lab404.model.Status;
 import com.example.lab404.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -20,30 +19,13 @@ public class PatientController {
     private PatientRepository patientRepository;
 
     @GetMapping("/patient")
-    public List<Patient> getPatients() {
+    public List<Patient> allPatients() {
         return patientRepository.findAll();
     }
 
-    @GetMapping("/patient/byId/{id}")
-    public Optional<Patient> getPatientById(@PathVariable Long id) {
-        return patientRepository.findById(id);
+    @PostMapping("/patient")
+    public Patient createPatient(@RequestBody @Valid Patient newPatient) {
+        return patientRepository.save(newPatient);
     }
-
-    @GetMapping("/patient/byDateOfBirth")
-    public List<Patient> getPatientsRangeDateOfBirth(@RequestParam String dateStart,
-                                                     @RequestParam String dateFinish) {
-        return patientRepository.findByDateOfBirthBetween(LocalDate.parse(dateStart), LocalDate.parse(dateFinish));
-    }
-
-    @GetMapping("/patient/byDoctorDepartment/{department}")
-    public List<Patient> getPatientsByDoctorDepartment(@PathVariable String department) {
-        return patientRepository.findByDoctor_Department(department);
-    }
-
-    @GetMapping("/patient/byDoctorStatusOff")
-    public List<Patient> getPatientsByDoctorStatusOff() {
-        return patientRepository.findByDoctor_Status(Status.OFF);
-    }
-
 
 }

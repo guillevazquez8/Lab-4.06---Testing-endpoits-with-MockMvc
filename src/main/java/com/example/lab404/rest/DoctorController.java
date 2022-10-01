@@ -1,15 +1,13 @@
 package com.example.lab404.rest;
 
 import com.example.lab404.model.Doctor;
-import com.example.lab404.model.Status;
 import com.example.lab404.repository.DoctorRepository;
 import com.example.lab404.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,22 +21,31 @@ public class DoctorController {
     private PatientRepository patientRepository;
 
     @GetMapping("/doctor")
-    public List<Doctor> getDoctors() {
+    public List<Doctor> allDoctors() {
         return doctorRepository.findAll();
     }
 
-    @GetMapping("/doctor/byId/{id}")
-    public Optional<Doctor> getDoctorById(@PathVariable Long id) {
-        return doctorRepository.findById(id);
+    @PostMapping("/doctor")
+    public Doctor createDoctor(@RequestBody @Valid Doctor newDoctor) {
+        return doctorRepository.save(newDoctor);
     }
 
-    @GetMapping("/doctor/byStatus")
-    public List<Doctor> getDoctorsByStatus(@RequestParam Status status) {
-        return doctorRepository.findByStatus(status);
+    @PatchMapping("/doctor/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Doctor updateStatus(@PathVariable Long id,
+                               @RequestBody Doctor updateDoctor) {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(id);
+        if (doctorOptional.isEmpty()) {
+            return null;
+        }
+        Doctor doctor = doctorOptional.get();
+        if (updateDoctor.getStatus() != null) {
+            doctor.setStatus(updateDoctor.getStatus());
+        }
+        if (updateDoctor.getDepartment() != null) {
+            doctor.setDepartment(updateDoctor.getDepartment());
+        }
+        return doctorRepository.save(doctor);
     }
 
-    @GetMapping("/doctor/byDepartment/{department}")
-    public List<Doctor> getDoctorsByDepartment(@PathVariable String department) {
-        return doctorRepository.findByDepartment(department);
-    }
 }
