@@ -3,6 +3,7 @@ package com.example.lab404.rest;
 import com.example.lab404.model.Doctor;
 import com.example.lab404.repository.DoctorRepository;
 import com.example.lab404.repository.PatientRepository;
+import com.example.lab404.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class DoctorController {
     private DoctorRepository doctorRepository;
 
     @Autowired
-    private PatientRepository patientRepository;
+    private DoctorService doctorService;
 
     @GetMapping("/doctor")
     public List<Doctor> allDoctors() {
