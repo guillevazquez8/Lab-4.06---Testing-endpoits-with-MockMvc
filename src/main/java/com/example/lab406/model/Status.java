@@ -1,4 +1,4 @@
-package com.example.lab404.model;
+package com.example.lab406.model;
 
 public enum Status {
     ON_CALL,

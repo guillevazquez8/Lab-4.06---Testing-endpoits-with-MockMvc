@@ -1,10 +1,8 @@
-package com.example.lab404.rest;
+package com.example.lab406.rest;
 
-import com.example.lab404.model.Doctor;
-import com.example.lab404.repository.DoctorRepository;
-import com.example.lab404.repository.PatientRepository;
-import com.example.lab404.service.DoctorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.lab406.model.Doctor;
+import com.example.lab406.repository.DoctorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +10,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 public class DoctorController {
 
-    @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
-    private DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
 
     @GetMapping("/doctor")
     public List<Doctor> allDoctors() {
@@ -27,6 +22,7 @@ public class DoctorController {
     }
 
     @PostMapping("/doctor")
+    @ResponseStatus(HttpStatus.CREATED)
     public Doctor createDoctor(@RequestBody @Valid Doctor newDoctor) {
         return doctorRepository.save(newDoctor);
     }
