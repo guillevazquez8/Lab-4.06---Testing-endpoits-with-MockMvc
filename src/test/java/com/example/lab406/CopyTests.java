@@ -1,4 +1,4 @@
-package com.example.lab406;
+/*package com.example.lab406;
 
 import com.example.lab406.model.Doctor;
 import com.example.lab406.repository.DoctorRepository;
@@ -77,4 +77,4 @@ class CopyTests {
     @Test
     void findAll() {
     }
-}
+}*/
