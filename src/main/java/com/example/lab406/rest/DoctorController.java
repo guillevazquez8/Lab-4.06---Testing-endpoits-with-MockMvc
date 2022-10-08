@@ -1,7 +1,9 @@
 package com.example.lab406.rest;
 
 import com.example.lab406.model.Doctor;
+import com.example.lab406.model.Status;
 import com.example.lab406.repository.DoctorRepository;
+import com.example.lab406.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,24 +16,39 @@ import java.util.Optional;
 @RestController
 public class DoctorController {
 
-    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
     @GetMapping("/doctor")
     public List<Doctor> allDoctors() {
-        return doctorRepository.findAll();
+        return doctorService.findAll();
+    }
+
+    @GetMapping("/doctor/byId/{id}")
+    public Optional<Doctor> getDoctorById(@PathVariable Long id) {
+        return doctorService.findById(id);
+    }
+
+    @GetMapping("/doctor/byStatus")
+    public List<Doctor> getDoctorsByStatus(@RequestParam Status status) {
+        return doctorService.findByStatus(status);
+    }
+
+    @GetMapping("/doctor/byDepartment/{department}")
+    public List<Doctor> getDoctorsByDepartment(@PathVariable String department) {
+        return doctorService.findByDepartment(department);
     }
 
     @PostMapping("/doctor")
     @ResponseStatus(HttpStatus.CREATED)
     public Doctor createDoctor(@RequestBody @Valid Doctor newDoctor) {
-        return doctorRepository.save(newDoctor);
+        return doctorService.save(newDoctor);
     }
 
     @PatchMapping("/doctor/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Doctor updateStatus(@PathVariable Long id,
                                @RequestBody Doctor updateDoctor) {
-        Optional<Doctor> doctorOptional = doctorRepository.findById(id);
+        Optional<Doctor> doctorOptional = doctorService.findById(id);
         if (doctorOptional.isEmpty()) {
             return null;
         }
@@ -42,7 +59,7 @@ public class DoctorController {
         if (updateDoctor.getDepartment() != null) {
             doctor.setDepartment(updateDoctor.getDepartment());
         }
-        return doctorRepository.save(doctor);
+        return doctorService.save(doctor);
     }
 
 }
