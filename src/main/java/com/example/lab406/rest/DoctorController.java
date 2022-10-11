@@ -13,38 +13,39 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@RequestMapping("doctor")
 @RestController
 public class DoctorController {
 
     private final DoctorService doctorService;
 
-    @GetMapping("/doctor")
+    @GetMapping
     public List<Doctor> allDoctors() {
         return doctorService.findAll();
     }
 
-    @GetMapping("/doctor/byId/{id}")
+    @GetMapping("byId/{id}")
     public Optional<Doctor> getDoctorById(@PathVariable Long id) {
         return doctorService.findById(id);
     }
 
-    @GetMapping("/doctor/byStatus")
-    public List<Doctor> getDoctorsByStatus(@RequestParam Status status) {
+    @GetMapping("byStatus/{status}")
+    public List<Doctor> getDoctorsByStatus(@PathVariable Status status) {
         return doctorService.findByStatus(status);
     }
 
-    @GetMapping("/doctor/byDepartment/{department}")
+    @GetMapping("byDepartment/{department}")
     public List<Doctor> getDoctorsByDepartment(@PathVariable String department) {
         return doctorService.findByDepartment(department);
     }
 
-    @PostMapping("/doctor")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Doctor createDoctor(@RequestBody @Valid Doctor newDoctor) {
         return doctorService.save(newDoctor);
     }
 
-    @PatchMapping("/doctor/{id}")
+    @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Doctor updateStatus(@PathVariable Long id,
                                @RequestBody Doctor updateDoctor) {

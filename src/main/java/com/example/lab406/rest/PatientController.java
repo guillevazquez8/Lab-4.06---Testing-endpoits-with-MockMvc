@@ -14,44 +14,45 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("patient")
 @RequiredArgsConstructor
 public class PatientController {
 
     private final PatientService patientService;
 
-    @GetMapping("/patient")
+    @GetMapping
     public List<Patient> allPatients() {
         return patientService.findAll();
     }
 
-    @GetMapping("/patient/byId/{id}")
+    @GetMapping("byId/{id}")
     public Optional<Patient> getPatientById(@PathVariable Long id) {
         return patientService.findById(id);
     }
 
-    @GetMapping("/patient/byDateOfBirth")
+    @GetMapping("byDateOfBirth")
     public List<Patient> getPatientsRangeDateOfBirth(@RequestParam String dateStart,
                                                      @RequestParam String dateFinish) {
         return patientService.findByDateOfBirthBetween(LocalDate.parse(dateStart), LocalDate.parse(dateFinish));
     }
 
-    @GetMapping("/patient/byDoctorDepartment/{department}")
+    @GetMapping("byDoctorDepartment/{department}")
     public List<Patient> getPatientsByDoctorDepartment(@PathVariable String department) {
         return patientService.findByDoctor_Department(department);
     }
 
-    @GetMapping("/patient/byDoctorStatusOff")
+    @GetMapping("byDoctorStatusOff")
     public List<Patient> getPatientsByDoctorStatusOff() {
         return patientService.findByDoctor_Status(Status.OFF);
     }
 
-    @PostMapping("/patient")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Patient createPatient(@RequestBody PatientDto newPatient) {
         return patientService.save(newPatient);
     }
 
-    @PutMapping("/patient/update/{id}")
+    @PutMapping("update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Patient updatePatient(@PathVariable Long id, @RequestBody PatientDto updatePatient) {
         Optional<Patient> patientOptional = patientService.findById(id);

@@ -27,6 +27,8 @@ class CopyTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
 
     @BeforeEach
@@ -75,6 +77,20 @@ class CopyTests {
     }
 
     @Test
-    void findAll() {
+    void shouldSaveDoctor() throws Exception {
+
+        Doctor doctor = new Doctor();
+        doctor.setEmployeeId("123");
+        doctor.setName("Jesus Benito");
+        doctor.setDepartment("Cardiology");
+        doctor.setStatus(EmployeeStatus.ON);
+        ResultActions resultActions = mockMvc.perform(post("/doctors")
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        Doctor doctorCreated = objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), Doctor.class);
+
+        assertEquals(doctor, doctorCreated);
     }
 }*/
