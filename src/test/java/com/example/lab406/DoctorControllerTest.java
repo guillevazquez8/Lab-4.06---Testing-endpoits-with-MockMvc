@@ -3,6 +3,7 @@ package com.example.lab406;
 import com.example.lab406.model.Doctor;
 import com.example.lab406.repository.DoctorRepository;
 import com.example.lab406.repository.PatientRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +19,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.lab406.model.Status.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,13 +36,9 @@ public class DoctorControllerTest {
     @Autowired
     private DoctorRepository doctorRepository;
     @Autowired
-    private PatientRepository patientRepository;
-    @Autowired
     private WebApplicationContext webApplicationContext;
-
     @Autowired
     protected ObjectMapper objectMapper;
-
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -60,8 +59,25 @@ public class DoctorControllerTest {
 
     @AfterEach
     void tearDown() {
-        patientRepository.deleteAll();
         doctorRepository.deleteAll();
+    }
+
+    @Test
+    void test_allDoctors() throws Exception {
+        MvcResult result = mockMvc
+                .perform(
+                        get("/doctor"))
+                .andExpect(
+                        status().isOk())
+                .andReturn();
+        List<Doctor> doctorsResult = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Doctor>>() { });
+        var doctors = doctorRepository.findAll();
+
+        assertEquals(doctors.size(), doctorsResult.size());
+        doctorsResult.sort(Comparator.comparing(Doctor::getId));
+        doctors.sort(Comparator.comparing(Doctor::getId));
+        assertThat(doctorsResult).usingRecursiveComparison()
+                .isEqualTo(doctors);
     }
 
     @Test
@@ -108,8 +124,9 @@ public class DoctorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
+                .andExpect(status()
+                        .isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.department").exists());
 
         /*Doctor newDoctor = new Doctor();
         newDoctor.setId(43312L);
