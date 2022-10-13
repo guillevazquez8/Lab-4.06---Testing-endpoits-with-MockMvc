@@ -12,8 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -25,6 +28,8 @@ import static com.example.lab406.model.Status.*;
 import static com.example.lab406.model.Status.OFF;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -133,6 +138,25 @@ public class PatientControllerTest {
                 .andReturn();
         assertTrue(result.getResponse().getContentAsString().contains("OFF"));
         assertTrue(result.getResponse().getContentAsString().contains("Vargas"));
+    }
+
+    @Test
+    void test_createPatient() throws Exception {
+        Doctor doctor7 = new Doctor(94857L, "surgery", "Nick Riviera", OFF);
+        doctorRepository.save(doctor7);
+        mockMvc.perform(MockMvcRequestBuilders
+                    .post("/patient")
+                    .content(objectMapper.writeValueAsString(new PatientDto("Joselito Elpingas", LocalDate.of(1997,11,3), "94857")))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(
+                        status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").exists());
+        var patients = patientRepository.findAll();
+        assertEquals(7, patients.size());
+        assertTrue(patients.toString().contains("Elpingas"));
+        assertFalse(patients.toString().contains("Siuuuu"));
     }
 
 }

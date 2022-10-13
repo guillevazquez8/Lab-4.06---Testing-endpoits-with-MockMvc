@@ -127,20 +127,9 @@ public class DoctorControllerTest {
                 .andExpect(status()
                         .isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.department").exists());
-
-        /*Doctor newDoctor = new Doctor();
-        newDoctor.setId(43312L);
-        newDoctor.setDepartment("psychology");
-        newDoctor.setName("Zalo Soliño");
-        newDoctor.setStatus(ON_CALL);
-        ResultActions resultsActions = mockMvc
-                .perform(post("/doctor")
-                        .content(objectMapper.writeValueAsString(newDoctor))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-        Doctor fakeDoctor = objectMapper.readValue(resultsActions.andReturn().getResponse().getContentAsString(), Doctor.class);
-
-        assertEquals(newDoctor, fakeDoctor);*/
+        var doctors = doctorRepository.findAll();
+        assertEquals(7, doctors.size());
+        assertTrue(doctors.toString().contains("Soliño"));
     }
 
 }
