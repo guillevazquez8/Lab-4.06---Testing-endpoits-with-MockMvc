@@ -1,4 +1,4 @@
-# Lab 4.06: Creating an API wit Spring Boot and testing endpoits with JUnit and MockMvc
+# Lab 4.06: Creating an API and testing endpoits with MockMvc
 
 1. Starting with database creation and modelling, I had to make a hospital API with employees and patients databases
 
