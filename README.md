@@ -6,6 +6,6 @@
 
 3. Implement business logic on the services, to create the functionalities I'd need in a Hospital app
 
-4. Create the GET/POST/PUT/PACTH/DELETE endpoints on the controller layer
+4. Create the GET/POST/PUT/PATCH/DELETE endpoints on the controller layer
 
 5. Finally, testing these endpoints with JUnit and MockMvc
